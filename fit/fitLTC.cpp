@@ -19,7 +19,7 @@ using namespace glm;
 #include "plot.h"
 
 // size of precomputed table (theta, alpha)
-const int N = 64;
+const int N = 128;
 // number of samples used to compute the error during fitting
 const int Nsample = 32;
 // minimal roughness (avoid singularities)
@@ -392,7 +392,7 @@ int main(int argc, char* argv[])
     writeTabC(tab, tabMagFresnel, N);
     writeDDS(tex1, tex2, N);
     writeJS(tex1, tex2, N);
-
+    writebin(tab, tabMagFresnel, N);
     // spherical plots
     // make_spherical_plots(brdf, tab, N);
 
