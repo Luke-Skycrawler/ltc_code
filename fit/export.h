@@ -57,55 +57,20 @@ void writeTabC(mat3 * tab, vec2 * tabMagFresnel, int N)
 
 void writebin(mat3 * tab, vec2 * tabMagFresnel, int N)
 {
-    ofstream file("results/ltcM.bin", ios::binary);
-
-    // file << std::fixed;
-    // file << std::setprecision(6);
-
-    // file << "static const int size = " << N << ";" << endl << endl;
-
-    // file << "static const mat33 tabM[size*size] = {" << endl;
-    for (int t = 0; t < N; ++t)
-        for (int a = 0; a < N; ++a)
-        {
-            // file << "{";
-            file << tab[a + t * N][0][0] << tab[a + t * N][0][1] << tab[a + t * N][0][2] ;
-            file << tab[a + t * N][1][0] << tab[a + t * N][1][1] << tab[a + t * N][1][2] ;
-            file << tab[a + t * N][2][0] << tab[a + t * N][2][1] << tab[a + t * N][2][2] ;
-            // if (a != N - 1 || t != N - 1)
-            //     file << ", ";
-            // file << endl;
-        }
-    // file << "};" << endl << endl;
-    ofstream file2("results/ltcM.bin", ios::binary);
-    // file << "static const mat33 tabMinv[size*size] = {" << endl;
+    ofstream file2("results/ltcM_inv.bin", ios::binary);
     for (int t = 0; t < N; ++t)
         for (int a = 0; a < N; ++a)
         {
             mat3 Minv = glm::inverse(tab[a + t * N]);
-
-            // file << "{";
-            file2 << Minv[0][0] << Minv[0][1] << Minv[0][2];
-            file2 << Minv[1][0] << Minv[1][1] << Minv[1][2];
-            file2 << Minv[2][0] << Minv[2][1] << Minv[2][2];
-            // if (a != N - 1 || t != N - 1)
-            //     file << ", ";
-            // file << endl;
+            float minv[] {
+                Minv[0][0], Minv[0][1], Minv[0][2],
+                Minv[1][0], Minv[1][1], Minv[1][2],
+                Minv[2][0], Minv[2][1], Minv[2][2]
+            };
+            file2.write((char*)minv, sizeof(float) * 9);
         }
-    // file << "};" << endl << endl;
+    file2.write((char*) tabMagFresnel, sizeof(float) * N * N);
 
-    // file << "static const float tabMagnitude[size*size] = {" << endl;
-    for (int t = 0; t < N; ++t)
-        for (int a = 0; a < N; ++a)
-        {
-            file2 << tabMagFresnel[a + t * N][0];
-            // if (a != N - 1 || t != N - 1)
-            //     file << ", ";
-            // file << endl;
-        }
-    // file << "};" << endl;
-
-    file.close();
     file2.close();
 }
 
@@ -200,6 +165,15 @@ void writeJS(vec4* data1, vec4* data2, int N)
     file << "];" << endl;
 
     file.close();
+}
+void writebin(vec4* data1, vec4* data2, int N)
+{
+    ofstream file("results/ltc_1.bin", ios::binary);
+    file.write((char *)data1, sizeof(vec4)*N*N);
+    file.close();    
+    ofstream file2("results/ltc_2.bin", ios::binary);
+    file2.write((char *)data2, sizeof(vec4)*N*N);
+    file2.close();
 }
 
 #endif
